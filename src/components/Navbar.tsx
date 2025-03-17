@@ -11,7 +11,8 @@ import {
   PiggyBank,
   DollarSign,
   Settings,
-  HelpCircle
+  HelpCircle,
+  LogIn
 } from "lucide-react";
 
 export const Navbar = () => {
@@ -44,8 +45,11 @@ export const Navbar = () => {
             <Link to="/contact" className="text-gray-600 hover:text-walletwise-purple px-3 py-2 rounded-md text-sm font-medium">
               Contact
             </Link>
-            <Link to="/dashboard">
-              <Button className="ml-4">Sign In</Button>
+            <Link to="/login">
+              <Button className="ml-4 flex items-center gap-2">
+                <LogIn className="h-4 w-4" />
+                Login
+              </Button>
             </Link>
           </div>
           
@@ -93,11 +97,11 @@ export const Navbar = () => {
               Contact
             </Link>
             <Link 
-              to="/dashboard"
+              to="/login"
               className="text-walletwise-purple hover:bg-walletwise-purple hover:text-white block px-3 py-2 rounded-md text-base font-medium"
               onClick={toggleMenu}
             >
-              Sign In
+              Login
             </Link>
           </div>
         </div>
