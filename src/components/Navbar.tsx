@@ -12,7 +12,8 @@ import {
   DollarSign,
   Settings,
   HelpCircle,
-  LogIn
+  LogIn,
+  UserPlus
 } from "lucide-react";
 
 export const Navbar = () => {
@@ -45,12 +46,20 @@ export const Navbar = () => {
             <Link to="/contact" className="text-gray-600 hover:text-walletwise-purple px-3 py-2 rounded-md text-sm font-medium">
               Contact
             </Link>
-            <Link to="/login">
-              <Button className="ml-4 flex items-center gap-2">
-                <LogIn className="h-4 w-4" />
-                Login
-              </Button>
-            </Link>
+            <div className="flex items-center gap-2 ml-4">
+              <Link to="/signup">
+                <Button variant="outline" className="flex items-center gap-2">
+                  <UserPlus className="h-4 w-4" />
+                  Sign Up
+                </Button>
+              </Link>
+              <Link to="/login">
+                <Button className="flex items-center gap-2">
+                  <LogIn className="h-4 w-4" />
+                  Login
+                </Button>
+              </Link>
+            </div>
           </div>
           
           <div className="flex md:hidden items-center">
@@ -95,6 +104,13 @@ export const Navbar = () => {
               onClick={toggleMenu}
             >
               Contact
+            </Link>
+            <Link 
+              to="/signup"
+              className="text-walletwise-purple hover:bg-walletwise-purple hover:text-white block px-3 py-2 rounded-md text-base font-medium"
+              onClick={toggleMenu}
+            >
+              Sign Up
             </Link>
             <Link 
               to="/login"
