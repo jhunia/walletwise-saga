@@ -59,7 +59,7 @@ const Index = () => {
             WalletWise helps you track expenses, set budgets, and achieve your financial goals with powerful tools and insights.
           </p>
           <div className="flex flex-col sm:flex-row justify-center gap-4">
-            <Link to="/dashboard">
+            <Link to="/login">
               <Button size="lg" variant="secondary" className="w-full sm:w-auto">
                 Get Started
               </Button>
@@ -135,7 +135,7 @@ const Index = () => {
           <p className="text-xl mb-8 max-w-2xl mx-auto">
             Join thousands of users who have transformed their financial lives with WalletWise.
           </p>
-          <Link to="/dashboard">
+          <Link to="/login">
             <Button size="lg" variant="secondary" className="w-full sm:w-auto">
               Start Your Free Trial
             </Button>
