@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Navbar } from "@/components/Navbar";
 import { Button } from "@/components/ui/button";
@@ -7,9 +6,10 @@ import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent } from "@/components/ui/card";
 import { MapPin, Phone, Mail, Clock } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-
 const Contact = () => {
-  const { toast } = useToast();
+  const {
+    toast
+  } = useToast();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -17,24 +17,25 @@ const Contact = () => {
     message: ""
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
-
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
+    const {
+      name,
+      value
+    } = e.target;
     setFormData(prev => ({
       ...prev,
       [name]: value
     }));
   };
-
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-    
+
     // Simulate API call
     setTimeout(() => {
       toast({
         title: "Message sent",
-        description: "We've received your message and will respond shortly.",
+        description: "We've received your message and will respond shortly."
       });
       setFormData({
         name: "",
@@ -45,36 +46,28 @@ const Contact = () => {
       setIsSubmitting(false);
     }, 1500);
   };
-
-  const contactInfo = [
-    {
-      icon: <MapPin className="h-6 w-6 text-walletwise-purple" />,
-      title: "Our Location",
-      details: ["123 Financial District", "San Francisco, CA 94104", "United States"]
-    },
-    {
-      icon: <Phone className="h-6 w-6 text-walletwise-purple" />,
-      title: "Phone",
-      details: ["+1 (555) 123-4567", "+1 (555) 987-6543"]
-    },
-    {
-      icon: <Mail className="h-6 w-6 text-walletwise-purple" />,
-      title: "Email",
-      details: ["support@walletwise.com", "info@walletwise.com"]
-    },
-    {
-      icon: <Clock className="h-6 w-6 text-walletwise-purple" />,
-      title: "Working Hours",
-      details: ["Monday - Friday: 9AM - 6PM", "Saturday: 10AM - 4PM", "Sunday: Closed"]
-    }
-  ];
-
-  return (
-    <div className="min-h-screen flex flex-col">
+  const contactInfo = [{
+    icon: <MapPin className="h-6 w-6 text-walletwise-purple" />,
+    title: "Our Location",
+    details: ["123 Financial District", "San Francisco, CA 94104", "United States"]
+  }, {
+    icon: <Phone className="h-6 w-6 text-walletwise-purple" />,
+    title: "Phone",
+    details: ["+1 (555) 123-4567", "+1 (555) 987-6543"]
+  }, {
+    icon: <Mail className="h-6 w-6 text-walletwise-purple" />,
+    title: "Email",
+    details: ["support@walletwise.com", "info@walletwise.com"]
+  }, {
+    icon: <Clock className="h-6 w-6 text-walletwise-purple" />,
+    title: "Working Hours",
+    details: ["Monday - Friday: 9AM - 6PM", "Saturday: 10AM - 4PM", "Sunday: Closed"]
+  }];
+  return <div className="min-h-screen flex flex-col">
       <Navbar />
       
       {/* Hero Section */}
-      <section className="bg-gradient-to-r from-walletwise-purple to-walletwise-light-purple text-white py-16">
+      <section className="bg-gradient-to-r from-walletwise-purple to-walletwise-light-purple text-white py-16 bg-gray-950">
         <div className="container mx-auto px-6 text-center">
           <h1 className="text-4xl md:text-5xl font-bold mb-4">Contact Us</h1>
           <p className="text-xl md:text-2xl mb-8 max-w-3xl mx-auto">
@@ -97,65 +90,27 @@ const Contact = () => {
                       <label htmlFor="name" className="block text-sm font-medium mb-1">
                         Your Name
                       </label>
-                      <Input
-                        id="name"
-                        name="name"
-                        value={formData.name}
-                        onChange={handleChange}
-                        placeholder="John Doe"
-                        required
-                        disabled={isSubmitting}
-                      />
+                      <Input id="name" name="name" value={formData.name} onChange={handleChange} placeholder="John Doe" required disabled={isSubmitting} />
                     </div>
                     <div>
                       <label htmlFor="email" className="block text-sm font-medium mb-1">
                         Email Address
                       </label>
-                      <Input
-                        id="email"
-                        name="email"
-                        type="email"
-                        value={formData.email}
-                        onChange={handleChange}
-                        placeholder="john@example.com"
-                        required
-                        disabled={isSubmitting}
-                      />
+                      <Input id="email" name="email" type="email" value={formData.email} onChange={handleChange} placeholder="john@example.com" required disabled={isSubmitting} />
                     </div>
                     <div>
                       <label htmlFor="subject" className="block text-sm font-medium mb-1">
                         Subject
                       </label>
-                      <Input
-                        id="subject"
-                        name="subject"
-                        value={formData.subject}
-                        onChange={handleChange}
-                        placeholder="How can we help you?"
-                        required
-                        disabled={isSubmitting}
-                      />
+                      <Input id="subject" name="subject" value={formData.subject} onChange={handleChange} placeholder="How can we help you?" required disabled={isSubmitting} />
                     </div>
                     <div>
                       <label htmlFor="message" className="block text-sm font-medium mb-1">
                         Message
                       </label>
-                      <Textarea
-                        id="message"
-                        name="message"
-                        value={formData.message}
-                        onChange={handleChange}
-                        placeholder="Please describe your question or concern in detail..."
-                        rows={5}
-                        required
-                        disabled={isSubmitting}
-                      />
+                      <Textarea id="message" name="message" value={formData.message} onChange={handleChange} placeholder="Please describe your question or concern in detail..." rows={5} required disabled={isSubmitting} />
                     </div>
-                    <Button
-                      type="submit"
-                      className="w-full md:w-auto"
-                      disabled={isSubmitting}
-                    >
+                    <Button type="submit" className="w-full md:w-auto" disabled={isSubmitting}>
                       {isSubmitting ? "Sending..." : "Send Message"}
                     </Button>
                   </form>
@@ -167,21 +122,17 @@ const Contact = () => {
             <div>
               <h2 className="text-3xl font-bold mb-6">Contact Information</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {contactInfo.map((info, index) => (
-                  <Card key={index} className="overflow-hidden border-t-4 border-t-walletwise-purple">
+                {contactInfo.map((info, index) => <Card key={index} className="overflow-hidden border-t-4 border-t-walletwise-purple">
                     <CardContent className="p-6">
                       <div className="flex items-start">
                         <div className="mr-4 mt-1">{info.icon}</div>
                         <div>
                           <h3 className="font-semibold text-lg mb-2">{info.title}</h3>
-                          {info.details.map((detail, i) => (
-                            <p key={i} className="text-gray-600 mb-1">{detail}</p>
-                          ))}
+                          {info.details.map((detail, i) => <p key={i} className="text-gray-600 mb-1">{detail}</p>)}
                         </div>
                       </div>
                     </CardContent>
-                  </Card>
-                ))}
+                  </Card>)}
               </div>
 
               <div className="mt-8">
@@ -283,8 +234,6 @@ const Contact = () => {
           </div>
         </div>
       </footer>
-    </div>
-  );
+    </div>;
 };
-
 export default Contact;
