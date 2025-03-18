@@ -3,3 +3,9 @@ project_id = "hlgpdjaamyhrvxglhesg"
 
 [functions.financial-advisor]
 verify_jwt = true
+
+[functions.send-notification]
+verify_jwt = true
+
+[functions.payment-service]
+verify_jwt = true

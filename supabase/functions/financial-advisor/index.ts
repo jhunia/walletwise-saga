@@ -1,5 +1,4 @@
 
-import "https://deno.land/x/xhr@0.1.0/mod.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 
 const corsHeaders = {
@@ -16,57 +15,31 @@ serve(async (req) => {
   try {
     const { prompt } = await req.json();
     
-    if (!prompt) {
-      return new Response(
-        JSON.stringify({ error: "Missing required field: prompt" }),
-        { 
-          status: 400,
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
-        }
-      );
+    // Here we'd normally use OpenAI or another AI service
+    // For now, we'll return predefined responses based on keywords
+    let response = '';
+    
+    if (prompt.toLowerCase().includes('save')) {
+      response = "To improve your savings, consider the 50/30/20 rule: Allocate 50% of your income to needs, 30% to wants, and 20% to savings. Set up automatic transfers to your savings account on payday.";
+    } else if (prompt.toLowerCase().includes('budget')) {
+      response = "Creating a budget starts with tracking your spending for a month. Then categorize expenses into necessities and discretionary spending. Use our budgeting tools to set spending limits for each category.";
+    } else if (prompt.toLowerCase().includes('invest')) {
+      response = "For beginning investors, consider low-cost index funds. They provide diversification and lower risk compared to individual stocks. Start with small amounts regularly rather than one large investment.";
+    } else if (prompt.toLowerCase().includes('debt')) {
+      response = "To tackle debt efficiently, focus on high-interest debt first, while making minimum payments on others. Consider the debt avalanche method (highest interest first) or the debt snowball method (smallest balance first).";
+    } else {
+      response = "I'm your financial advisor assistant. Ask me about saving, budgeting, investing, or debt management for personalized advice.";
     }
 
-    // Create a system message that specializes this AI in financial advice
-    const systemMessage = `
-      You are WalletWise AI, a helpful financial advisor assistant.
-      You provide personalized financial advice, budgeting tips, and help users understand their finances better.
-      You are knowledgeable about personal finance, investing, saving strategies, debt management, and financial planning.
-      Always be supportive, encouraging, and practical in your advice.
-      Keep responses concise and focused on actionable financial guidance.
-    `;
-    
-    // This is a mock response for now since we don't have the OpenAI API key
-    // In a production environment, you would use the OpenAI API here
-    const mockResponses = [
-      "Based on your spending patterns, I recommend allocating 50% of your income to necessities, 30% to wants, and 20% to savings and debt repayment.",
-      "To reach your savings goal faster, consider automating your savings by setting up automatic transfers on payday.",
-      "For your investment question, a diversified portfolio with low-cost index funds could be a good long-term strategy.",
-      "Looking at your budget, there's an opportunity to reduce spending in the dining category by about 15%. This could free up an additional $120 per month for your emergency fund.",
-      "To improve your credit score, focus on making all payments on time and reducing your credit utilization ratio to below 30%."
-    ];
-    
-    // Select a random response from the mock responses
-    const randomIndex = Math.floor(Math.random() * mockResponses.length);
-    const response = mockResponses[randomIndex];
-
-    console.log("Financial advice query:", prompt);
-    console.log("Financial advice response:", response);
-
-    return new Response(
-      JSON.stringify({ 
-        response: response,
-        prompt: prompt
-      }),
-      { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-    );
+    return new Response(JSON.stringify({ response }), {
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      status: 200,
+    });
   } catch (error) {
-    console.error("Error in financial-advisor function:", error);
-    return new Response(
-      JSON.stringify({ error: error.message }),
-      { 
-        status: 500,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
-      }
-    );
+    console.error("Error processing request:", error);
+    return new Response(JSON.stringify({ error: error.message }), {
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      status: 500,
+    });
   }
 });
