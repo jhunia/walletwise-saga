@@ -26,7 +26,7 @@ const Help = () => {
               <div>
                 <h3 className="font-medium text-lg mb-1">How to link my bank account?</h3>
                 <p className="text-gray-500">
-                  Go to Settings > Linked Accounts and follow the instructions to connect your bank account securely.
+                  Go to Settings {'>'}  Linked Accounts and follow the instructions to connect your bank account securely.
                 </p>
               </div>
               
