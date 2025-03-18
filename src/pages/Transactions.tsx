@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { DashboardLayout } from "@/components/DashboardLayout";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -10,11 +9,15 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Search, Filter, Plus, Download, ArrowUpDown, CreditCard, Wallet, DollarSign, RefreshCw } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
 
 const Transactions = () => {
   const [transactionType, setTransactionType] = useState("all");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [newTransactionType, setNewTransactionType] = useState("expense");
+  const { toast } = useToast();
 
   // Sample transaction data
   const transactions = [
@@ -32,10 +35,52 @@ const Transactions = () => {
     { id: 12, name: "Interest Payment", amount: 12.50, date: "2023-05-01", category: "Income", type: "income", account: "Savings Account" },
   ];
 
-  // Filter transactions based on the selected type
   const filteredTransactions = transactionType === "all" 
     ? transactions 
     : transactions.filter(transaction => transaction.type === transactionType);
+
+  const exportToPDF = () => {
+    const doc = new jsPDF();
+    
+    // Add title
+    doc.setFontSize(20);
+    doc.text("Transaction Report", 14, 22);
+    
+    // Add current date
+    doc.setFontSize(11);
+    doc.text(`Generated on: ${new Date().toLocaleDateString()}`, 14, 30);
+    
+    // Add filtered type information
+    doc.setFontSize(11);
+    doc.text(`Type: ${transactionType === 'all' ? 'All Transactions' : 
+      transactionType === 'income' ? 'Income Only' : 'Expenses Only'}`, 14, 36);
+    
+    // Format data for the table
+    const tableData = filteredTransactions.map(transaction => [
+      transaction.name,
+      transaction.category,
+      transaction.account,
+      transaction.date,
+      `${transaction.amount > 0 ? '+' : ''}${transaction.amount.toLocaleString('en-US', { style: 'currency', currency: 'USD' })}`
+    ]);
+    
+    // Add table
+    autoTable(doc, {
+      head: [['Description', 'Category', 'Account', 'Date', 'Amount']],
+      body: tableData,
+      startY: 45,
+      styles: { fontSize: 10, cellPadding: 3 },
+      headStyles: { fillColor: [110, 89, 165] }
+    });
+    
+    // Save with filename
+    doc.save(`transactions-${new Date().toISOString().split('T')[0]}.pdf`);
+    
+    toast({
+      title: "Export successful",
+      description: "Your transactions have been exported to PDF",
+    });
+  };
 
   return (
     <DashboardLayout>
@@ -47,9 +92,9 @@ const Transactions = () => {
               <Plus className="mr-2 h-4 w-4" />
               Add Transaction
             </Button>
-            <Button variant="outline" className="flex-shrink-0">
+            <Button variant="outline" className="flex-shrink-0" onClick={exportToPDF}>
               <Download className="mr-2 h-4 w-4" />
-              Export
+              Export PDF
             </Button>
           </div>
         </div>
