@@ -22,10 +22,22 @@ import {
   QrCode,
   Users
 } from "lucide-react";
+import { useState } from "react";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 export const AppSidebar = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const [logoutDialogOpen, setLogoutDialogOpen] = useState(false);
 
   const menuItems = [
     {
@@ -80,39 +92,65 @@ export const AppSidebar = () => {
     return location.pathname === path || location.pathname.startsWith(`${path}/`);
   };
 
+  const handleLogout = () => {
+    setLogoutDialogOpen(true);
+  };
+
+  const confirmLogout = () => {
+    navigate("/");
+    setLogoutDialogOpen(false);
+  };
+
   return (
-    <Sidebar>
-      <div className="p-4">
-        <div className="text-xl font-bold text-walletwise-purple">WalletWise</div>
-      </div>
-      <SidebarContent>
-        <SidebarGroup>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              {menuItems.map((item) => (
-                <SidebarMenuItem key={item.path}>
+    <>
+      <Sidebar>
+        <div className="p-4">
+          <div className="text-xl font-bold text-walletwise-purple">WalletWise</div>
+        </div>
+        <SidebarContent>
+          <SidebarGroup>
+            <SidebarGroupContent>
+              <SidebarMenu>
+                {menuItems.map((item) => (
+                  <SidebarMenuItem key={item.path}>
+                    <SidebarMenuButton
+                      className={isActive(item.path) ? "bg-primary/10 text-primary" : ""}
+                      onClick={() => navigate(item.path)}
+                    >
+                      <item.icon className="h-5 w-5" />
+                      <span>{item.title}</span>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                ))}
+                <SidebarMenuItem>
                   <SidebarMenuButton
-                    className={isActive(item.path) ? "bg-primary/10 text-primary" : ""}
-                    onClick={() => navigate(item.path)}
+                    className="text-walletwise-red"
+                    onClick={handleLogout}
                   >
-                    <item.icon className="h-5 w-5" />
-                    <span>{item.title}</span>
+                    <LogOut className="h-5 w-5" />
+                    <span>Logout</span>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
-              ))}
-              <SidebarMenuItem>
-                <SidebarMenuButton
-                  className="text-walletwise-red"
-                  onClick={() => navigate("/")}
-                >
-                  <LogOut className="h-5 w-5" />
-                  <span>Logout</span>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
-      </SidebarContent>
-    </Sidebar>
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
+        </SidebarContent>
+      </Sidebar>
+
+      <AlertDialog open={logoutDialogOpen} onOpenChange={setLogoutDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Confirm Logout</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to log out? Any unsaved changes will be lost.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={confirmLogout}>Log Out</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    </>
   );
 };

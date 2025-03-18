@@ -10,6 +10,11 @@ import Index from "./pages/Index";
 import Dashboard from "./pages/Dashboard";
 import Transactions from "./pages/Transactions";
 import Budget from "./pages/Budget";
+import Reports from "./pages/Reports";
+import SharedAccounts from "./pages/SharedAccounts";
+import Payments from "./pages/Payments";
+import Settings from "./pages/Settings";
+import Help from "./pages/Help";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import ForgotPassword from "./pages/ForgotPassword";
@@ -31,6 +36,11 @@ const App = () => (
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/transactions" element={<Transactions />} />
           <Route path="/budget" element={<Budget />} />
+          <Route path="/reports" element={<Reports />} />
+          <Route path="/shared-accounts" element={<SharedAccounts />} />
+          <Route path="/payments" element={<Payments />} />
+          <Route path="/settings" element={<Settings />} />
+          <Route path="/help" element={<Help />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
