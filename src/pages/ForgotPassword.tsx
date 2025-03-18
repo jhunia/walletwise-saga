@@ -17,15 +17,14 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Mail, ArrowLeft } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { useToast } from "@/hooks/use-toast";
+import { useAuth } from "@/contexts/AuthContext";
 
 const formSchema = z.object({
   email: z.string().email("Please enter a valid email address"),
 });
 
 export default function ForgotPassword() {
-  const { toast } = useToast();
-  const [isLoading, setIsLoading] = useState(false);
+  const { forgotPassword } = useAuth();
   const [isSubmitted, setIsSubmitted] = useState(false);
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -35,30 +34,11 @@ export default function ForgotPassword() {
     },
   });
 
+  const { isSubmitting } = form.formState;
+
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    setIsLoading(true);
-    
-    try {
-      // Here we would normally handle password reset request
-      // For now, we'll just simulate a successful request
-      console.log("Password reset request for:", values.email);
-      
-      toast({
-        title: "Reset link sent",
-        description: "Check your email for instructions to reset your password.",
-      });
-      
-      setIsSubmitted(true);
-    } catch (error) {
-      console.error("Password reset error:", error);
-      toast({
-        variant: "destructive",
-        title: "Request failed",
-        description: "There was a problem sending the reset link. Please try again.",
-      });
-    } finally {
-      setIsLoading(false);
-    }
+    await forgotPassword(values.email);
+    setIsSubmitted(true);
   }
 
   return (
@@ -105,7 +85,7 @@ export default function ForgotPassword() {
                             placeholder="name@example.com"
                             className="pl-10"
                             {...field}
-                            disabled={isLoading}
+                            disabled={isSubmitting}
                           />
                         </div>
                       </FormControl>
@@ -116,9 +96,9 @@ export default function ForgotPassword() {
                 <Button
                   type="submit"
                   className="w-full"
-                  disabled={isLoading}
+                  disabled={isSubmitting}
                 >
-                  {isLoading ? "Sending reset link..." : "Send reset link"}
+                  {isSubmitting ? "Sending reset link..." : "Send reset link"}
                 </Button>
               </form>
             </Form>

@@ -33,11 +33,13 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import { useAuth } from "@/contexts/AuthContext";
 
 export const AppSidebar = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [logoutDialogOpen, setLogoutDialogOpen] = useState(false);
+  const { signOut } = useAuth();
 
   const menuItems = [
     {
@@ -96,8 +98,8 @@ export const AppSidebar = () => {
     setLogoutDialogOpen(true);
   };
 
-  const confirmLogout = () => {
-    navigate("/");
+  const confirmLogout = async () => {
+    await signOut();
     setLogoutDialogOpen(false);
   };
 

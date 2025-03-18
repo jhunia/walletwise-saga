@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -17,7 +17,7 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { LockKeyhole, Mail, User, ArrowRight } from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
+import { useAuth } from "@/contexts/AuthContext";
 
 const formSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
@@ -33,9 +33,15 @@ const formSchema = z.object({
 });
 
 export default function Signup() {
-  const { toast } = useToast();
+  const { signUp, user } = useAuth();
   const navigate = useNavigate();
-  const [isLoading, setIsLoading] = useState(false);
+
+  // Redirect to dashboard if already logged in
+  useEffect(() => {
+    if (user) {
+      navigate("/dashboard");
+    }
+  }, [user, navigate]);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -48,31 +54,12 @@ export default function Signup() {
     },
   });
 
+  const { isSubmitting } = form.formState;
+
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    setIsLoading(true);
-    
-    try {
-      // Here we would normally handle user registration
-      // For now, we'll just simulate a successful signup
-      console.log("Signup form values:", values);
-      
-      toast({
-        title: "Account created!",
-        description: "Welcome to WalletWise. You can now log in.",
-      });
-      
-      // Redirect to login page after successful signup
-      navigate("/login");
-    } catch (error) {
-      console.error("Signup error:", error);
-      toast({
-        variant: "destructive",
-        title: "Signup failed",
-        description: "There was a problem creating your account. Please try again.",
-      });
-    } finally {
-      setIsLoading(false);
-    }
+    await signUp(values.email, values.password, {
+      full_name: values.name
+    });
   }
 
   return (
@@ -100,7 +87,7 @@ export default function Signup() {
                           placeholder="John Doe"
                           className="pl-10"
                           {...field}
-                          disabled={isLoading}
+                          disabled={isSubmitting}
                         />
                       </div>
                     </FormControl>
@@ -121,7 +108,7 @@ export default function Signup() {
                           placeholder="name@example.com"
                           className="pl-10"
                           {...field}
-                          disabled={isLoading}
+                          disabled={isSubmitting}
                         />
                       </div>
                     </FormControl>
@@ -143,7 +130,7 @@ export default function Signup() {
                           placeholder="••••••••"
                           className="pl-10"
                           {...field}
-                          disabled={isLoading}
+                          disabled={isSubmitting}
                         />
                       </div>
                     </FormControl>
@@ -165,7 +152,7 @@ export default function Signup() {
                           placeholder="••••••••"
                           className="pl-10"
                           {...field}
-                          disabled={isLoading}
+                          disabled={isSubmitting}
                         />
                       </div>
                     </FormControl>
@@ -182,7 +169,7 @@ export default function Signup() {
                       <Checkbox
                         checked={field.value}
                         onCheckedChange={field.onChange}
-                        disabled={isLoading}
+                        disabled={isSubmitting}
                       />
                     </FormControl>
                     <div className="grid gap-1.5 leading-none">
@@ -210,10 +197,10 @@ export default function Signup() {
               <Button
                 type="submit"
                 className="w-full"
-                disabled={isLoading}
+                disabled={isSubmitting}
               >
-                {isLoading ? "Creating account..." : "Create Account"}
-                {!isLoading && <ArrowRight className="ml-2 h-4 w-4" />}
+                {isSubmitting ? "Creating account..." : "Create Account"}
+                {!isSubmitting && <ArrowRight className="ml-2 h-4 w-4" />}
               </Button>
             </form>
           </Form>
@@ -229,10 +216,10 @@ export default function Signup() {
               </div>
             </div>
             <div className="mt-4 grid grid-cols-2 gap-3">
-              <Button variant="outline" type="button" disabled={isLoading}>
+              <Button variant="outline" type="button" disabled={isSubmitting}>
                 Google
               </Button>
-              <Button variant="outline" type="button" disabled={isLoading}>
+              <Button variant="outline" type="button" disabled={isSubmitting}>
                 Apple
               </Button>
             </div>

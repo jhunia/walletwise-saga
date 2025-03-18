@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -17,7 +17,7 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { LockKeyhole, Mail, ArrowRight } from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
+import { useAuth } from "@/contexts/AuthContext";
 
 const formSchema = z.object({
   email: z.string().email("Please enter a valid email address"),
@@ -26,9 +26,15 @@ const formSchema = z.object({
 });
 
 export default function Login() {
-  const { toast } = useToast();
+  const { signIn, user } = useAuth();
   const navigate = useNavigate();
-  const [isLoading, setIsLoading] = useState(false);
+
+  // Redirect to dashboard if already logged in
+  useEffect(() => {
+    if (user) {
+      navigate("/dashboard");
+    }
+  }, [user, navigate]);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -39,31 +45,10 @@ export default function Login() {
     },
   });
 
+  const { isSubmitting } = form.formState;
+
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    setIsLoading(true);
-    
-    try {
-      // Here we would normally handle authentication
-      // For now, we'll just simulate a successful login
-      console.log("Login form values:", values);
-      
-      toast({
-        title: "Welcome back!",
-        description: "You have successfully logged in.",
-      });
-      
-      // Redirect to dashboard after successful login
-      navigate("/dashboard");
-    } catch (error) {
-      console.error("Login error:", error);
-      toast({
-        variant: "destructive",
-        title: "Login failed",
-        description: "Invalid email or password. Please try again.",
-      });
-    } finally {
-      setIsLoading(false);
-    }
+    await signIn(values.email, values.password);
   }
 
   return (
@@ -91,7 +76,7 @@ export default function Login() {
                           placeholder="name@example.com"
                           className="pl-10"
                           {...field}
-                          disabled={isLoading}
+                          disabled={isSubmitting}
                         />
                       </div>
                     </FormControl>
@@ -113,7 +98,7 @@ export default function Login() {
                           placeholder="••••••••"
                           className="pl-10"
                           {...field}
-                          disabled={isLoading}
+                          disabled={isSubmitting}
                         />
                       </div>
                     </FormControl>
@@ -131,7 +116,7 @@ export default function Login() {
                         <Checkbox
                           checked={field.value}
                           onCheckedChange={field.onChange}
-                          disabled={isLoading}
+                          disabled={isSubmitting}
                         />
                       </FormControl>
                       <FormLabel className="text-sm cursor-pointer">
@@ -150,10 +135,10 @@ export default function Login() {
               <Button
                 type="submit"
                 className="w-full"
-                disabled={isLoading}
+                disabled={isSubmitting}
               >
-                {isLoading ? "Logging in..." : "Sign In"}
-                {!isLoading && <ArrowRight className="ml-2 h-4 w-4" />}
+                {isSubmitting ? "Logging in..." : "Sign In"}
+                {!isSubmitting && <ArrowRight className="ml-2 h-4 w-4" />}
               </Button>
             </form>
           </Form>
@@ -169,10 +154,10 @@ export default function Login() {
               </div>
             </div>
             <div className="mt-4 grid grid-cols-2 gap-3">
-              <Button variant="outline" type="button" disabled={isLoading}>
+              <Button variant="outline" type="button" disabled={isSubmitting}>
                 Google
               </Button>
-              <Button variant="outline" type="button" disabled={isLoading}>
+              <Button variant="outline" type="button" disabled={isSubmitting}>
                 Apple
               </Button>
             </div>
