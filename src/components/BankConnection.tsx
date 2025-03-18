@@ -8,7 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useToast } from "@/components/ui/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
-import { Bank, CreditCard, ShieldCheck } from "lucide-react";
+import { Building, CreditCard, ShieldCheck } from "lucide-react";
 
 export function BankConnection() {
   const { user } = useAuth();
@@ -68,7 +68,7 @@ export function BankConnection() {
     <Card className="w-full max-w-md mx-auto">
       <CardHeader>
         <CardTitle className="flex items-center">
-          <Bank className="mr-2 h-5 w-5" />
+          <Building className="mr-2 h-5 w-5" />
           Connect Your Bank
         </CardTitle>
         <CardDescription>

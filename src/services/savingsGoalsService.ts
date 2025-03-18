@@ -64,6 +64,13 @@ export const savingsGoalsService = {
 
   async createGoal(goal: CreateSavingsGoalParams): Promise<SavingsGoal | null> {
     try {
+      // Get the current user
+      const { data: { user } } = await supabase.auth.getUser();
+      
+      if (!user) {
+        throw new Error('You must be logged in to create a savings goal');
+      }
+      
       const { data, error } = await supabase
         .from('savings_goals')
         .insert({
@@ -71,6 +78,7 @@ export const savingsGoalsService = {
           target_amount: goal.target_amount,
           current_amount: goal.current_amount || 0,
           target_date: goal.target_date,
+          user_id: user.id // Add the user_id from the authenticated user
         })
         .select()
         .single();
