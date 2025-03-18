@@ -1,5 +1,5 @@
-
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { DashboardLayout } from "@/components/DashboardLayout";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -276,15 +276,17 @@ const Dashboard = () => {
                 <CardTitle>Savings Goals</CardTitle>
                 <CardDescription>Track your progress towards financial goals</CardDescription>
               </div>
-              <Button variant="outline" size="sm">
-                <Plus className="mr-2 h-4 w-4" />
-                New Goal
-              </Button>
+              <Link to="/savings">
+                <Button variant="outline" size="sm">
+                  <Plus className="mr-2 h-4 w-4" />
+                  New Goal
+                </Button>
+              </Link>
             </div>
           </CardHeader>
           <CardContent>
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-              <div className="bg-gray-50 p-4 rounded-lg">
+              <Link to="/savings" className="block bg-gray-50 p-4 rounded-lg hover:bg-gray-100 transition-colors">
                 <h3 className="font-semibold mb-1">Emergency Fund</h3>
                 <div className="flex justify-between text-sm mb-2">
                   <span>$6,500 saved</span>
@@ -292,8 +294,8 @@ const Dashboard = () => {
                 </div>
                 <Progress value={65} className="h-2 mb-2" />
                 <p className="text-xs text-muted-foreground">65% complete • Est. completion: Oct 2023</p>
-              </div>
-              <div className="bg-gray-50 p-4 rounded-lg">
+              </Link>
+              <Link to="/savings" className="block bg-gray-50 p-4 rounded-lg hover:bg-gray-100 transition-colors">
                 <h3 className="font-semibold mb-1">Vacation</h3>
                 <div className="flex justify-between text-sm mb-2">
                   <span>$1,200 saved</span>
@@ -301,8 +303,8 @@ const Dashboard = () => {
                 </div>
                 <Progress value={40} className="h-2 mb-2" />
                 <p className="text-xs text-muted-foreground">40% complete • Est. completion: Dec 2023</p>
-              </div>
-              <div className="bg-gray-50 p-4 rounded-lg">
+              </Link>
+              <Link to="/savings" className="block bg-gray-50 p-4 rounded-lg hover:bg-gray-100 transition-colors">
                 <h3 className="font-semibold mb-1">New Car</h3>
                 <div className="flex justify-between text-sm mb-2">
                   <span>$4,500 saved</span>
@@ -310,7 +312,7 @@ const Dashboard = () => {
                 </div>
                 <Progress value={30} className="h-2 mb-2" />
                 <p className="text-xs text-muted-foreground">30% complete • Est. completion: Mar 2024</p>
-              </div>
+              </Link>
             </div>
           </CardContent>
         </Card>

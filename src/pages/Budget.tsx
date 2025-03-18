@@ -1,5 +1,4 @@
-
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { DashboardLayout } from "@/components/DashboardLayout";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
@@ -34,9 +33,23 @@ import {
 const Budget = () => {
   const [isNewBudgetDialogOpen, setIsNewBudgetDialogOpen] = useState(false);
   const [activeTab, setActiveTab] = useState("overview");
+  const [timeRange, setTimeRange] = useState("month");
 
   // Sample budget data
-  const budgetData = [
+  const weeklyBudgetData = [
+    { id: 1, category: "Housing", budgeted: 300, spent: 300, remaining: 0, status: "on-track" },
+    { id: 2, category: "Food & Dining", budgeted: 150, spent: 120, remaining: 30, status: "on-track" },
+    { id: 3, category: "Transportation", budgeted: 85, spent: 70, remaining: 15, status: "on-track" },
+    { id: 4, category: "Utilities", budgeted: 75, spent: 70, remaining: 5, status: "on-track" },
+    { id: 5, category: "Entertainment", budgeted: 50, spent: 35, remaining: 15, status: "on-track" },
+    { id: 6, category: "Shopping", budgeted: 50, spent: 60, remaining: -10, status: "over-budget" },
+    { id: 7, category: "Health & Fitness", budgeted: 35, spent: 25, remaining: 10, status: "on-track" },
+    { id: 8, category: "Personal Care", budgeted: 25, spent: 20, remaining: 5, status: "on-track" },
+    { id: 9, category: "Subscriptions", budgeted: 12, spent: 12, remaining: 0, status: "on-track" },
+    { id: 10, category: "Other", budgeted: 25, spent: 10, remaining: 15, status: "on-track" },
+  ];
+
+  const monthlyBudgetData = [
     { id: 1, category: "Housing", budgeted: 1200, spent: 1200, remaining: 0, status: "on-track" },
     { id: 2, category: "Food & Dining", budgeted: 600, spent: 500, remaining: 100, status: "on-track" },
     { id: 3, category: "Transportation", budgeted: 350, spent: 300, remaining: 50, status: "on-track" },
@@ -49,13 +62,51 @@ const Budget = () => {
     { id: 10, category: "Other", budgeted: 100, spent: 30, remaining: 70, status: "on-track" },
   ];
 
-  // Calculate totals
-  const totalBudgeted = budgetData.reduce((sum, item) => sum + item.budgeted, 0);
-  const totalSpent = budgetData.reduce((sum, item) => sum + item.spent, 0);
-  const totalRemaining = totalBudgeted - totalSpent;
-  const spentPercentage = Math.round((totalSpent / totalBudgeted) * 100);
+  const yearlyBudgetData = [
+    { id: 1, category: "Housing", budgeted: 14400, spent: 14000, remaining: 400, status: "on-track" },
+    { id: 2, category: "Food & Dining", budgeted: 7200, spent: 6800, remaining: 400, status: "on-track" },
+    { id: 3, category: "Transportation", budgeted: 4200, spent: 3900, remaining: 300, status: "on-track" },
+    { id: 4, category: "Utilities", budgeted: 3600, spent: 3500, remaining: 100, status: "on-track" },
+    { id: 5, category: "Entertainment", budgeted: 2400, spent: 2200, remaining: 200, status: "on-track" },
+    { id: 6, category: "Shopping", budgeted: 2400, spent: 2600, remaining: -200, status: "over-budget" },
+    { id: 7, category: "Health & Fitness", budgeted: 1800, spent: 1700, remaining: 100, status: "on-track" },
+    { id: 8, category: "Personal Care", budgeted: 1200, spent: 1100, remaining: 100, status: "on-track" },
+    { id: 9, category: "Subscriptions", budgeted: 600, spent: 600, remaining: 0, status: "on-track" },
+    { id: 10, category: "Other", budgeted: 1200, spent: 1000, remaining: 200, status: "on-track" },
+  ];
 
-  // Sample spending trends data
+  // State to manage current budget data based on time range
+  const [budgetData, setBudgetData] = useState(monthlyBudgetData);
+
+  // Update budget data when time range changes
+  useEffect(() => {
+    switch (timeRange) {
+      case "week":
+        setBudgetData(weeklyBudgetData);
+        break;
+      case "month":
+        setBudgetData(monthlyBudgetData);
+        break;
+      case "year":
+        setBudgetData(yearlyBudgetData);
+        break;
+      default:
+        setBudgetData(monthlyBudgetData);
+    }
+  }, [timeRange]);
+
+  // Weekly spending trends data
+  const weeklySpendingData = [
+    { name: "Mon", Housing: 40, Food: 20, Transportation: 10, Utilities: 5, Entertainment: 10, Shopping: 15, Other: 10 },
+    { name: "Tue", Housing: 40, Food: 25, Transportation: 12, Utilities: 0, Entertainment: 5, Shopping: 10, Other: 8 },
+    { name: "Wed", Housing: 40, Food: 18, Transportation: 15, Utilities: 0, Entertainment: 12, Shopping: 5, Other: 10 },
+    { name: "Thu", Housing: 40, Food: 22, Transportation: 8, Utilities: 0, Entertainment: 15, Shopping: 0, Other: 5 },
+    { name: "Fri", Housing: 40, Food: 30, Transportation: 10, Utilities: 0, Entertainment: 25, Shopping: 20, Other: 7 },
+    { name: "Sat", Housing: 40, Food: 35, Transportation: 5, Utilities: 70, Entertainment: 30, Shopping: 25, Other: 10 },
+    { name: "Sun", Housing: 40, Food: 28, Transportation: 10, Utilities: 0, Entertainment: 20, Shopping: 15, Other: 8 },
+  ];
+
+  // Monthly spending trends data
   const monthlySpendingData = [
     { name: "Jan", Housing: 1200, Food: 550, Transportation: 300, Utilities: 280, Entertainment: 180, Shopping: 220, Other: 300 },
     { name: "Feb", Housing: 1200, Food: 580, Transportation: 320, Utilities: 290, Entertainment: 190, Shopping: 200, Other: 280 },
@@ -63,6 +114,40 @@ const Budget = () => {
     { name: "Apr", Housing: 1200, Food: 540, Transportation: 310, Utilities: 295, Entertainment: 160, Shopping: 230, Other: 290 },
     { name: "May", Housing: 1200, Food: 500, Transportation: 300, Utilities: 290, Entertainment: 150, Shopping: 250, Other: 260 },
   ];
+
+  // Yearly spending trends data
+  const yearlySpendingData = [
+    { name: "2020", Housing: 13800, Food: 6500, Transportation: 3600, Utilities: 3400, Entertainment: 2100, Shopping: 2300, Other: 3100 },
+    { name: "2021", Housing: 14000, Food: 6700, Transportation: 3800, Utilities: 3450, Entertainment: 2200, Shopping: 2400, Other: 3000 },
+    { name: "2022", Housing: 14200, Food: 6900, Transportation: 3900, Utilities: 3500, Entertainment: 2300, Shopping: 2500, Other: 3200 },
+    { name: "2023", Housing: 14400, Food: 7100, Transportation: 4000, Utilities: 3550, Entertainment: 2350, Shopping: 2550, Other: 3250 },
+  ];
+
+  // State to manage spending data based on time range
+  const [spendingData, setSpendingData] = useState(monthlySpendingData);
+
+  // Update spending data when time range changes
+  useEffect(() => {
+    switch (timeRange) {
+      case "week":
+        setSpendingData(weeklySpendingData);
+        break;
+      case "month":
+        setSpendingData(monthlySpendingData);
+        break;
+      case "year":
+        setSpendingData(yearlySpendingData);
+        break;
+      default:
+        setSpendingData(monthlySpendingData);
+    }
+  }, [timeRange]);
+
+  // Calculate totals
+  const totalBudgeted = budgetData.reduce((sum, item) => sum + item.budgeted, 0);
+  const totalSpent = budgetData.reduce((sum, item) => sum + item.spent, 0);
+  const totalRemaining = totalBudgeted - totalSpent;
+  const spentPercentage = Math.round((totalSpent / totalBudgeted) * 100);
 
   const COLORS = ["#6E59A5", "#9b87f5", "#4CAF50", "#F44336", "#2196F3", "#FFC107", "#757575"];
 
@@ -72,6 +157,13 @@ const Budget = () => {
         <div className="flex flex-col md:flex-row justify-between md:items-center gap-4">
           <h1 className="text-3xl font-bold tracking-tight">Budget</h1>
           <div className="flex items-center gap-2">
+            <Tabs value={timeRange} onValueChange={setTimeRange} className="mr-4">
+              <TabsList>
+                <TabsTrigger value="week">Week</TabsTrigger>
+                <TabsTrigger value="month">Month</TabsTrigger>
+                <TabsTrigger value="year">Year</TabsTrigger>
+              </TabsList>
+            </Tabs>
             <Button onClick={() => setIsNewBudgetDialogOpen(true)}>
               <Plus className="mr-2 h-4 w-4" />
               Create Budget
@@ -95,7 +187,9 @@ const Budget = () => {
                 </CardHeader>
                 <CardContent>
                   <div className="text-2xl font-bold">${totalBudgeted.toLocaleString()}</div>
-                  <p className="text-xs text-muted-foreground">Monthly budget allocation</p>
+                  <p className="text-xs text-muted-foreground">
+                    {timeRange === "week" ? "Weekly" : timeRange === "month" ? "Monthly" : "Yearly"} budget allocation
+                  </p>
                 </CardContent>
               </Card>
               
@@ -126,8 +220,12 @@ const Budget = () => {
 
             <Card>
               <CardHeader>
-                <CardTitle>Monthly Budget Summary</CardTitle>
-                <CardDescription>Your spending progress for the current month</CardDescription>
+                <CardTitle>
+                  {timeRange === "week" ? "Weekly" : timeRange === "month" ? "Monthly" : "Yearly"} Budget Summary
+                </CardTitle>
+                <CardDescription>
+                  Your spending progress for the current {timeRange}
+                </CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="space-y-2">
@@ -211,7 +309,7 @@ const Budget = () => {
                     
                     <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-md">
                       <h4 className="text-sm font-medium mb-1">Spending Tip</h4>
-                      <p className="text-xs text-muted-foreground">
+                      <p className="text-sm text-muted-foreground">
                         Try to keep your non-essential spending under 30% of your total income to maintain healthy finances.
                       </p>
                     </div>
@@ -226,7 +324,9 @@ const Budget = () => {
             <Card>
               <CardHeader>
                 <CardTitle>Budget Categories</CardTitle>
-                <CardDescription>Manage all your budget categories</CardDescription>
+                <CardDescription>
+                  Manage your {timeRange === "week" ? "weekly" : timeRange === "month" ? "monthly" : "yearly"} budget categories
+                </CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="rounded-md border">
@@ -289,12 +389,14 @@ const Budget = () => {
             <Card>
               <CardHeader>
                 <CardTitle>Spending Trends</CardTitle>
-                <CardDescription>Track your spending patterns over time</CardDescription>
+                <CardDescription>
+                  {timeRange === "week" ? "Daily" : timeRange === "month" ? "Monthly" : "Yearly"} spending patterns
+                </CardDescription>
               </CardHeader>
               <CardContent className="h-[400px]">
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart
-                    data={monthlySpendingData}
+                    data={spendingData}
                     margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
                   >
                     <CartesianGrid strokeDasharray="3 3" />
